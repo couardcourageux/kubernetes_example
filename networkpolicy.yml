@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: mysqltodo
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      role: db
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              role: todo
+      ports:
+        - protocol: TCP
+          port: 3306
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              role: mysql
+      ports:
+        - protocol: TCP
+          port: 3306
